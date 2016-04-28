@@ -83,7 +83,10 @@ public class KSTokenField: UITextField {
    
    /// default is grayColor()
    var placeHolderColor: UIColor = UIColor.grayColor()
-   
+
+   /// default is UIFont.systemFontOfSize(14)
+   var placeHolderFont: UIFont = UIFont.systemFontOfSize(14)
+
    /// default is 120.0. After maximum limit is reached, tokens starts scrolling vertically
    var maximumHeight: CGFloat = 120.0
    
@@ -120,6 +123,7 @@ public class KSTokenField: UITextField {
             _removesTokensOnEndEditing = tokenView!.removesTokensOnEndEditing
             _descriptionText = tokenView!.descriptionText
             placeHolderColor = tokenView!.placeholderColor
+			placeHolderFont = tokenView!.placeholderFont
             promptTextColor = tokenView!.promptColor
             _setPromptText(tokenView!.promptText)
             
@@ -602,6 +606,7 @@ public class KSTokenField: UITextField {
       if (_placeholderLabel == nil) {
          _placeholderLabel = UILabel(frame: CGRect(x: xPos, y: leftView!.frame.origin.y-5, width: _selfFrame!.width - xPos - _leftViewRect().size.width, height: 30))
          _placeholderLabel?.textColor = placeHolderColor
+		 _placeholderLabel?.font = placeHolderFont
          _scrollView.addSubview(_placeholderLabel!)
          
       } else {

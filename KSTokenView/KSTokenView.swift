@@ -339,7 +339,14 @@ public class KSTokenView: UIView {
             _updateTokenField()
         }
     }
-   
+
+	/// default is UIFont.systemFontOfSize(14)
+	public var placeholderFont: UIFont = UIFont.systemFontOfSize(14) {
+		didSet {
+			_updateTokenField()
+		}
+	}
+
    /// default is .Rounded, creates rounded corner
    public var style: KSTokenViewStyle = .Rounded {
       didSet(newValue) {
