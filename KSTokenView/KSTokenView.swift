@@ -69,7 +69,7 @@ import UIKit
    optional func tokenViewDidBeginEditing(tokenView: KSTokenView)
    optional func tokenViewDidEndEditing(tokenView: KSTokenView)
    
-   func tokenView(token: KSTokenView, performSearchWithString string: String, completion: ((results: Array<AnyObject>) -> Void)?)
+   optional func tokenView(token: KSTokenView, performSearchWithString string: String, completion: ((results: Array<AnyObject>) -> Void)?)
    func tokenView(token: KSTokenView, displayTitleForObject object: AnyObject) -> String
    optional func tokenView(token: KSTokenView, withObject object: AnyObject, tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
    optional func tokenView(token: KSTokenView, didSelectRowAtIndexPath indexPath: NSIndexPath)
@@ -692,7 +692,7 @@ public class KSTokenView: UIView {
       _showActivityIndicator()
       
       let trimmedSearchString = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-      delegate?.tokenView(self, performSearchWithString:trimmedSearchString, completion: { (results) -> Void in
+      delegate?.tokenView?(self, performSearchWithString:trimmedSearchString, completion: { (results) -> Void in
          self._hideActivityIndicator()
          if (results.count > 0) {
             self._displayData(results)
