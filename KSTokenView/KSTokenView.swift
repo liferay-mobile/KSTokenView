@@ -95,7 +95,7 @@ public class KSTokenView: UIView {
    //MARK: - Private Properties
    //__________________________________________________________________________________
    //
-   private var _tokenField: KSTokenField!
+   public var tokenField: KSTokenField!
    private var _searchTableView: UITableView = UITableView(frame: .zero, style: UITableViewStyle.Plain)
    private var _resultArray = [AnyObject]()
    private var _showingSearchResult = false
@@ -110,10 +110,10 @@ public class KSTokenView: UIView {
    /// returns the value of field
    public var text : String {
       get {
-         return _tokenField.text!.substringWithRange(_tokenField.text!.startIndex.advancedBy(1)..<self._tokenField.text!.endIndex)         
+         return tokenField.text!.substringWithRange(tokenField.text!.startIndex.advancedBy(1)..<self.tokenField.text!.endIndex)         
       }
       set (string) {
-         _tokenField.text = KSTextEmpty+string
+         tokenField.text = KSTextEmpty+string
       }
    }
    
@@ -148,8 +148,8 @@ public class KSTokenView: UIView {
    /// Default is whiteColor
    override public var backgroundColor: UIColor? {
       didSet {
-         if (oldValue != backgroundColor && _tokenField != nil) {
-            _tokenField.backgroundColor = backgroundColor
+         if (oldValue != backgroundColor && tokenField != nil) {
+            tokenField.backgroundColor = backgroundColor
          }
       }
    }
@@ -178,7 +178,7 @@ public class KSTokenView: UIView {
    /// default is 120.0. After maximum limit is reached, tokens starts scrolling vertically
    public var maximumHeight: CGFloat = 120.0 {
       didSet {
-         _tokenField.maximumHeight = maximumHeight
+         tokenField.maximumHeight = maximumHeight
       }
    }
    
@@ -312,17 +312,17 @@ public class KSTokenView: UIView {
    /// default is true. If false, cannot be edited
    public var editable: Bool = true {
       didSet(newValue) {
-         _tokenField.enabled = newValue
+         tokenField.enabled = newValue
       }
    }
    
    /// default is nil
    public var placeholder: String {
       get {
-         return _tokenField.placeholder!
+         return tokenField.placeholder!
       }
       set {
-         _tokenField.placeholder = newValue
+         tokenField.placeholder = newValue
       }
    }
 
@@ -391,14 +391,14 @@ public class KSTokenView: UIView {
    
    private func _commonSetup() {
       backgroundColor = UIColor.clearColor()
-      _tokenField = KSTokenField(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
-      _tokenField.textColor = UIColor.blackColor()
-      _tokenField.enabled = true
-      _tokenField.tokenFieldDelegate = self
-      _tokenField.placeholder = ""
-      _tokenField.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+      tokenField = KSTokenField(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
+      tokenField.textColor = UIColor.blackColor()
+      tokenField.enabled = true
+      tokenField.tokenFieldDelegate = self
+      tokenField.placeholder = ""
+      tokenField.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
       _updateTokenField()
-      addSubview(_tokenField)
+      addSubview(tokenField)
       
       _indicator.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
       _indicator.hidesWhenStopped = true
@@ -418,7 +418,7 @@ public class KSTokenView: UIView {
    //__________________________________________________________________________________
    //
    override public func layoutSubviews() {
-      _tokenField.updateLayout(false)
+      tokenField.updateLayout(false)
       _searchTableView.frame.size = CGSize(width: frame.width, height: searchResultSize.height)
    }
    
@@ -427,26 +427,26 @@ public class KSTokenView: UIView {
    //
    
    private func _updateTokenField() {
-      _tokenField.parentView = self
+      tokenField.parentView = self
    }
    
    private func _updateTokenFieldLayout(newValue: KSTokenViewStyle) {
       switch (newValue) {
       case .Rounded:
-         _tokenField.borderStyle = .RoundedRect
+         tokenField.borderStyle = .RoundedRect
          backgroundColor = UIColor.clearColor()
          
       case .Squared:
-         _tokenField.borderStyle = .Bezel
-         backgroundColor = _tokenField.backgroundColor
+         tokenField.borderStyle = .Bezel
+         backgroundColor = tokenField.backgroundColor
       }
    }
    
    private func _lastToken() -> KSToken? {
-      if _tokenField.tokens.count == 0 {
+      if tokenField.tokens.count == 0 {
          return nil
       }
-      return _tokenField.tokens.last
+      return tokenField.tokens.last
    }
    
    private func _removeToken(token: KSToken, removingAll: Bool = false) {
@@ -463,14 +463,14 @@ public class KSTokenView: UIView {
          }
          delegate?.tokenView?(self, willDeleteToken: token)
       }
-      _tokenField.removeToken(token, removingAll: removingAll)
+      tokenField.removeToken(token, removingAll: removingAll)
       if (!removingAll) {
          delegate?.tokenView?(self, didDeleteToken: token)
       }
    }
    
    private func _canAddMoreToken() -> Bool {
-      if (maxTokenLimit != -1 && _tokenField.tokens.count >= maxTokenLimit) {
+      if (maxTokenLimit != -1 && tokenField.tokens.count >= maxTokenLimit) {
          _hideSearchResults()
          return false
       }
@@ -484,7 +484,7 @@ public class KSTokenView: UIView {
    - returns: Array of KSToken objects
    */
    public func tokens () -> Array<KSToken>? {
-      return _tokenField.tokens
+      return tokenField.tokens
    }
    
    //MARK: - Add Token
@@ -548,10 +548,10 @@ public class KSTokenView: UIView {
       delegate?.tokenView?(self, willAddToken: token)
       var addedToken: KSToken?
       if let updaetdToken = delegate?.tokenView?(self, shouldChangeAppearanceForToken: token) {
-         addedToken = _tokenField.addToken(updaetdToken)
+         addedToken = tokenField.addToken(updaetdToken)
          
       } else {
-         addedToken = _tokenField.addToken(token)
+         addedToken = tokenField.addToken(token)
       }
       
       delegate?.tokenView?(self, didAddToken: addedToken!)
@@ -579,7 +579,7 @@ public class KSTokenView: UIView {
    */
    public func deleteTokenWithObject(object: AnyObject?) {
       if object == nil {return}
-      for token in _tokenField.tokens {
+      for token in tokenField.tokens {
          if (token.object!.isEqual(object)) {
             _removeToken(token)
             break
@@ -591,7 +591,7 @@ public class KSTokenView: UIView {
    Deletes all added tokens. This doesn't delete sticky token
    */
    public func deleteAllTokens() {
-      if (_tokenField.tokens.count == 0) {return}
+      if (tokenField.tokens.count == 0) {return}
       var shouldDeleteAllTokens: Bool? = true
       
       if let shouldRemoveAll = delegate?.tokenViewShouldDeleteAllToken?(self) {
@@ -604,8 +604,8 @@ public class KSTokenView: UIView {
       }
       
       delegate?.tokenViewWillDeleteAllToken?(self)
-      for token in _tokenField.tokens {_removeToken(token, removingAll: true)}
-      _tokenField.updateLayout()
+      for token in tokenField.tokens {_removeToken(token, removingAll: true)}
+      tokenField.updateLayout()
       delegate?.tokenViewDidDeleteAllToken?(self)
       
       if (_showingSearchResult) {
@@ -639,7 +639,7 @@ public class KSTokenView: UIView {
    - returns: KSToken object
    */
    public func selectedToken() -> KSToken? {
-      return _tokenField.selectedToken
+      return tokenField.selectedToken
    }
    
    
@@ -661,16 +661,16 @@ public class KSTokenView: UIView {
    }
    
    public override func isFirstResponder() -> Bool {
-      return _tokenField.isFirstResponder()
+      return tokenField.isFirstResponder()
    }
    
    override public func becomeFirstResponder() -> Bool {
-      return _tokenField.becomeFirstResponder()
+      return tokenField.becomeFirstResponder()
    }
    
    override public func resignFirstResponder() -> Bool {
-      if (!_addTokenFromUntokenizedText(_tokenField)) {
-         _tokenField.resignFirstResponder()
+      if (!_addTokenFromUntokenizedText(tokenField)) {
+         tokenField.resignFirstResponder()
       }
       return false
    }
@@ -713,7 +713,7 @@ public class KSTokenView: UIView {
    }
    
    private func _showSearchResults() {
-      if (_tokenField.isFirstResponder()) {
+      if (tokenField.isFirstResponder()) {
          _showingSearchResult = true
          addSubview(_searchTableView)
          _searchTableView.frame.origin = CGPoint(x: 0, y: bounds.height)
@@ -745,10 +745,10 @@ public class KSTokenView: UIView {
          var shouldAdd = !(filteredResults as NSArray).containsObject(object)
          
          if (shouldAdd) {
-            if (!shouldDisplayAlreadyTokenized && _tokenField.tokens.count > 0) {
+            if (!shouldDisplayAlreadyTokenized && tokenField.tokens.count > 0) {
                
                // Search if already tokenized
-               for token: KSToken in _tokenField.tokens {
+               for token: KSToken in tokenField.tokens {
                   if (object.isEqual(token.object)) {
                      shouldAdd = false
                      break
@@ -854,24 +854,24 @@ extension KSTokenView : UITextFieldDelegate {
    public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
     
       // If backspace is pressed
-      if (_tokenField.tokens.count > 0 && _tokenField.text == KSTextEmpty && string.isEmpty == true && shouldDeleteTokenOnBackspace) {
+      if (tokenField.tokens.count > 0 && tokenField.text == KSTextEmpty && string.isEmpty == true && shouldDeleteTokenOnBackspace) {
          if (_lastToken() != nil) {
             if (selectedToken() != nil) {
                deleteSelectedToken()
             } else {
-               _tokenField.selectToken(_lastToken()!)
+               tokenField.selectToken(_lastToken()!)
             }
          }
          return false
       }
       
       // Prevent removing KSTextEmpty
-      if (string.isEmpty == true && _tokenField.text == KSTextEmpty) {
+      if (string.isEmpty == true && tokenField.text == KSTextEmpty) {
          return false
       }
     
       var searchString: String
-      let olderText = _tokenField.text
+      let olderText = tokenField.text
       var olderTextTrimmed = olderText!
       // remove the empty text marker from the beginning of the string
       if (olderText?.characters.first == KSTextEmpty.characters.first) {
@@ -906,7 +906,7 @@ extension KSTokenView : UITextFieldDelegate {
          _hideSearchResults()
       }
     
-      _tokenField.scrollViewScrollToEnd()
+      tokenField.scrollViewScrollToEnd()
       return true
    }
    
