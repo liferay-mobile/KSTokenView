@@ -116,8 +116,10 @@ public class KSToken : UIControl {
    //
    override public func drawRect(rect: CGRect) {
       //// General Declarations
-      let context = UIGraphicsGetCurrentContext()
-      
+	  guard let context = UIGraphicsGetCurrentContext() else {
+		 return
+	  }
+
       //// Rectangle Drawing
       
       // fill background
