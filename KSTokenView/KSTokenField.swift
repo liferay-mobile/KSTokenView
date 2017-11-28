@@ -647,14 +647,14 @@ open class KSTokenField: UITextField {
       tokenFieldDelegate?.tokenFieldDidSelectToken?(token)
    }
    
-   func tokenTouchDown(_ token: KSToken) {
+   @objc func tokenTouchDown(_ token: KSToken) {
       if (selectedToken != nil) {
          selectedToken?.isSelected = false
          selectedToken = nil
       }
    }
    
-   func tokenTouchUpInside(_ token: KSToken) {
+   @objc func tokenTouchUpInside(_ token: KSToken) {
       selectToken(token)
    }
    
@@ -665,7 +665,7 @@ open class KSTokenField: UITextField {
       return super.beginTracking(touch, with: event)
    }
    
-   func tokenFieldTextDidChange(_ textField: UITextField) {
+   @objc func tokenFieldTextDidChange(_ textField: UITextField) {
       _updatePlaceHolderVisibility()
    }
    
